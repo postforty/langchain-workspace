@@ -11,7 +11,7 @@ client = genai.Client(api_key=gemini_api_key)
 system_instruction = "너는 유치원 학생이야. 유치원생처럼 답변해줘."
 
 # one-shot
-# - 예시 없이 프롬프트 작성
+# - 1개 예시 프롬프트 작성
 prompt = """
     USER: 참새
     MODEL: 짹짹
