@@ -13,16 +13,42 @@ gemini_api_key = os.getenv("GEMINI_API_KEY")
 
 st.title("나만의 챗봇 만들기")
 
+with st.sidebar:
+    clear_btn = st.button("대화 초기화")
+
+    selected_prompt = st.selectbox(
+        "언어를 선택해 주세요", ("Korean", "English"), index=0
+    )
+
+# print("clear_btn:", clear_btn)
+# print("selected_prompt:", selected_prompt)
+
 if "messages" not in st.session_state:
     st.session_state["messages"] = []
 
+if clear_btn:
+    st.session_state["messages"] = []
+
 def create_chain():
-    prompt = ChatPromptTemplate.from_messages(
-        [
-            ("system", "당신은 친절한 AI 어시스턴트입니다."),
-            ("user", "#Question:\n{question}")
-        ]
-    )
+    print("selected_prompt:", selected_prompt)
+
+    if selected_prompt == "Korean":
+        prompt = ChatPromptTemplate.from_messages(
+            [
+                ("system", "당신은 한국어로 대답하는 친절한 AI 어시스턴트입니다."),
+                ("user", "#Question:\n{question}")
+            ]
+        )
+
+    if selected_prompt == "English":
+        prompt = ChatPromptTemplate.from_messages(
+            [
+                ("system", "You are a friendly AI assistant who answers in English. Please make sure to answer Korean questions in English."),
+                ("user", "#Question:\n{question}")
+            ]
+        )
+    
+    print("prompt:", prompt)
 
     llm = ChatGoogleGenerativeAI(
         model="gemini-2.5-flash",
@@ -71,7 +97,7 @@ if user_input:
         
     add_message("assistant", ai_answer)
 
-print("st.session_state.messages:", st.session_state.messages)
+# print("st.session_state.messages:", st.session_state.messages)
 
 
 
