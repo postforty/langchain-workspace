@@ -9,6 +9,7 @@ from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmb
 from langchain_community.vectorstores import FAISS
 from langchain_core.runnables import RunnablePassthrough
 from langchain_ollama import OllamaEmbeddings
+from langchain_ollama.llms import OllamaLLM
 
 import shutil # 파일 및 디렉토리 작업용
 import uuid # 고유 키 생성
@@ -20,7 +21,7 @@ load_dotenv()
 gemini_api_key = os.getenv("GEMINI_API_KEY")
 
 st.title("PDF 기반 Q&A")
-st.caption("Ollama BGE-M3 + gemini-2.5-flash") # 캡션 추가
+st.caption("Ollama BGE-M3 + Multi LLM") # 캡션 추가
 
 if not os.path.exists(".cache"):
     os.mkdir(".cache")
@@ -99,16 +100,20 @@ def embed_file(file):
 
     return retriever
    
-def create_chain(retriever, prompt_filepath):
+def create_chain(retriever, prompt_filepath, model_name):
     prompt = load_prompt(prompt_filepath, encoding="utf-8")
     
-    print("prompt:", prompt)
+    print("model_name:", model_name)
 
-    llm = ChatGoogleGenerativeAI(
-        model="gemini-2.5-flash",
-        temperature=0,
-        google_api_key=gemini_api_key
-    )
+    if model_name.startswith("gemini"):
+        llm = ChatGoogleGenerativeAI(
+            model=model_name,
+            temperature=0,
+            google_api_key=gemini_api_key)
+    else:
+        llm = OllamaLLM(
+            model=model_name, 
+            base_url="http://localhost:11434")
 
     output_parser = StrOutputParser()
 
@@ -155,6 +160,12 @@ with st.sidebar:
 
     selected_prompt = "prompts/pdf-rag.yaml"
 
+    selected_model = st.selectbox(
+        "LLM 선택",
+        ["gemini-2.5-pro", "gemini-2.5-flash", "gemini-2.5-flash-lite", "gemma3:latest"],
+        index=1
+    )
+
 # * 프로그램 시작 시 또는 다시 시작될 때 기존 벡터 저장소 로드
 if st.session_state["chain"] is None:
     embedding_files = [f for f in os.listdir(
@@ -169,12 +180,12 @@ if st.session_state["chain"] is None:
         if vectorstore:
             retriever = vectorstore.as_retriever()
             st.session_state["chain"] = create_chain(
-                retriever, selected_prompt)
+                retriever, selected_prompt, selected_model)
             st.success(f"기존 벡터 저장소 '{first_embedding_file}'를 로드했습니다.")
 
 if uploaded_file:
     retriever = embed_file(uploaded_file)
-    chain = create_chain(retriever, selected_prompt)
+    chain = create_chain(retriever, selected_prompt, selected_model)
     st.session_state["chain"] = chain
 
 print_messages()
