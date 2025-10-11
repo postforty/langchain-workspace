@@ -1,0 +1,31 @@
+crawling:
+  max_pages: 10
+  delay_between_requests: 2000
+  timeout: 30000
+  retry_count: 3
+  headless: false
+  user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+
+output:
+  format: ["csv", "json"]
+  directory: "./output"
+  include_images: true
+  filename_prefix: "nike_shoes"
+
+filters:
+  min_price: 0
+  max_price: 1000000
+  min_rating: 0
+  categories: ["운동화", "스니커즈"]
+  brands: ["나이키"]
+
+logging:
+  level: "INFO"
+  file: "./logs/crawler.log"
+  max_size: "10MB"
+  backup_count: 5
+
+search:
+  keyword: "나이키 신발"
+  sort_by: "rel"  # rel: 관련도, price: 가격, review: 리뷰수
+  page_size: 40
