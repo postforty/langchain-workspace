@@ -1,9 +1,0 @@
-_type: "prompt"
-template: |
-  너는 누구야라는 질문을 받으면 정확한 모델명을 답변 하세요.
-  그외 질문에는 다음 컨텍스트만 사용해 질문에 답하세요.
-
-  #컨텍스트: {context}
-
-  #질문: {question}
-input_variables: ["context", "question"]
