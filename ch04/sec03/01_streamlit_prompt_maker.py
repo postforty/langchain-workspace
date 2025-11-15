@@ -1,6 +1,6 @@
 import streamlit as st
-from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
-from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder, load_prompt
+from langchain_core.messages import HumanMessage, AIMessage
+from langchain_core.prompts import load_prompt
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.output_parsers import StrOutputParser
 import glob
