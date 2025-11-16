@@ -27,8 +27,16 @@ if "runnable" not in st.session_state:
     st.session_state.last_prompt = None
     st.session_state.last_task = ""
 
+def clear_task_input():
+    st.session_state.task_input = ""
+    st.session_state["messages"] = []
+    st.session_state.runnable = None
+    st.session_state.last_prompt = None
+    st.session_state.last_task = ""
+    st.session_state.chat_histories = {}
+
 with st.sidebar:
-    clear_btn = st.button("초기화")
+    st.button("초기화", on_click=clear_task_input)
 
     prompt_files = glob.glob("prompts_multi_turn/*.yaml")
     prompt_labels = {
@@ -47,7 +55,7 @@ with st.sidebar:
     task_input = st.text_input(
         "TASK 입력",
         key="task_input",
-        value=st.session_state["task_input"]
+        value=st.session_state.task_input
     )
 
 # print("선택한 프롬프트:", selected_prompt)
@@ -55,7 +63,7 @@ with st.sidebar:
 
 def print_messages():
     for msg in st.session_state.messages:
-        st.chat_message(msg.role).write(msg.content)
+        st.chat_message(msg.role).markdown(msg.content)
 
 def add_message(role, message):
     st.session_state["messages"].append(
@@ -75,9 +83,6 @@ def create_chain(prompt_filepath, task=""):
     chain = prompt | llm | output_parsers
 
     return chain
-
-if clear_btn:
-    st.session_state["messages"] = []
 
 if "chat_histories" not in st.session_state:
     st.session_state.chat_histories = {}
@@ -111,15 +116,28 @@ if prompt := st.chat_input("궁금한 내용을 물어보세요..."):
     st.chat_message("user").markdown(prompt)
     add_message("user", prompt)
 
-    response = st.session_state.runnable.invoke(
-        {
-            "question": prompt
-        },
-        config={"configurable": {"session_id": "any"}}
+    # response = st.session_state.runnable.invoke(
+    #     {
+    #         "question": prompt
+    #     },
+    #     config={"configurable": {"session_id": "any"}}
+    # )
+
+    # st.chat_message("assistant").markdown(response)
+
+    response = st.session_state.runnable.stream(
+        {"question": prompt}, config={"configurable": {"session_id": "any"}}
     )
 
-    st.chat_message("assistant").markdown(response)
+    with st.chat_message("assistant"):
+        container = st.empty()
 
-    add_message("assistant", response)
+        ai_answer = ""
+
+        for token in response:
+            ai_answer += token
+            container.markdown(ai_answer)
+
+    add_message("assistant", ai_answer)
 
 print(st.session_state.messages)
