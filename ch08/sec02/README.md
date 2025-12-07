@@ -8,6 +8,6 @@
 
 ## 실행 화면
 
-![실행 화면](img\01_pdf_chatbot.jpg)
+![실행 화면](./img/01_pdf_chatbot.jpg)
 
 
