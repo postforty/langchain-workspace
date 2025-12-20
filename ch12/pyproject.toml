@@ -1,0 +1,17 @@
+[project]
+name = "ch12"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "faiss-cpu>=1.13.1",
+    "ipykernel>=7.1.0",
+    "jupyter>=1.1.1",
+    "jupyterlab>=4.5.1",
+    "langchain>=1.2.0",
+    "langchain-community>=0.4.1",
+    "langchain-google-genai>=4.1.2",
+    "langgraph>=1.0.5",
+    "pymupdf>=1.26.7",
+]
