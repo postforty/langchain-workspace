@@ -12,6 +12,17 @@ st.title("🤖나만의 LangChain 챗봇 만들기")
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
+with st.sidebar:
+    clear_btn = st.button("초기화")
+
+    selected_prompt = st.selectbox("언어를 선택해 주세요.", ("Korean", "English"), index=0)
+
+# print(clear_btn)
+print(selected_prompt)
+
+if clear_btn:
+    st.session_state.messages = [] # 대화 내용 초기화
+
 def print_messages():
     for message in st.session_state.messages:
         if message.type == "human":
@@ -30,13 +41,22 @@ def add_message(role, message):
         return
 
 def create_chain():
-    prompt = ChatPromptTemplate.from_messages(
-        [
-            SystemMessage(content="당신은 친절하고 도움이 되는 AI 어시스턴트입니다."),
-            MessagesPlaceholder(variable_name="messages"),
-            HumanMessagePromptTemplate.from_template("{prompt}")
-        ]
-    )
+    if selected_prompt == "Korean":
+        prompt = ChatPromptTemplate.from_messages(
+            [
+                SystemMessage(content="당신은 반드시 한국어로 대답하는 친절하고 도움이 되는 AI 어시스턴트입니다."),
+                MessagesPlaceholder(variable_name="messages"),
+                HumanMessagePromptTemplate.from_template("{prompt}")
+            ]
+        )
+    if selected_prompt == "English":
+        prompt = ChatPromptTemplate.from_messages(
+            [
+                SystemMessage(content="당신은 반드시 영어로 대답하는 친절하고 도움이 되는 AI 어시스턴트입니다."),
+                MessagesPlaceholder(variable_name="messages"),
+                HumanMessagePromptTemplate.from_template("{prompt}")
+            ]
+        )
     model = init_chat_model("google_genai:gemini-2.5-flash")
     ouput_parser = StrOutputParser()
 
@@ -51,7 +71,7 @@ if prompt := st.chat_input("궁금한 내용을 물어보세요!"):
 
     chain = create_chain()
 
-    response = chain.invoke(
+    response = chain.stream(
         {
             "messages": st.session_state.messages,
             "prompt": prompt
@@ -59,7 +79,13 @@ if prompt := st.chat_input("궁금한 내용을 물어보세요!"):
     )
 
     add_message("user", prompt)
-    add_message("assistant", response)
 
-    st.chat_message("assistant").markdown(response)
+    container = st.empty()
 
+    ai_answer = ""
+
+    for token in response:
+        ai_answer += token
+        container.chat_message("assistant").markdown(ai_answer)
+
+    add_message("assistant", ai_answer)
