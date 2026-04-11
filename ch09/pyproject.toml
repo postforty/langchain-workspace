@@ -6,12 +6,15 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "ddgs>=9.12.1",
+    "fastmcp>=3.2.3",
     "ipykernel>=7.2.0",
     "jupyter>=1.1.1",
     "jupyterlab>=4.5.5",
     "langchain>=1.2.10",
     "langchain-community>=0.4.1",
     "langchain-google-genai>=4.2.1",
+    "langchain-mcp-adapters>=0.2.2",
+    "streamlit>=1.56.0",
     "tabulate>=0.10.0",
     "yfinance>=1.2.0",
 ]
