@@ -1,9 +1,10 @@
 [project]
-name = "ch01"
+name = "ch02"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "pydantic>=2.13.3",
+    "google-genai>=1.73.1",
+    "python-dotenv>=1.2.2",
 ]
