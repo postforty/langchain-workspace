@@ -1,5 +1,5 @@
 [project]
-name = "ch04"
+name = "ch05"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
@@ -12,5 +12,4 @@ dependencies = [
     "jupyterlab>=4.5.7",
     "python-dotenv>=1.2.2",
     "langgraph>=1.1.10",
-    "gradio>=6.14.0",
 ]
