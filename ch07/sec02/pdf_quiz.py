@@ -45,6 +45,16 @@ if "mode" not in st.session_state:
 def parse_ai_json(ai_response):
     """AI 응답에서 JSON 추출"""
     try:
+        # 추가!!!
+        if isinstance(ai_response, list):
+            parts = []
+            for part in ai_response:
+                if isinstance(part, dict) and "text" in part:
+                    parts.append(part["text"])
+                elif isinstance(part, str):
+                    parts.append(part)
+            ai_response = "".join(parts)
+            
         json_match = re.search(r'\{.*\}', ai_response, re.DOTALL)
         if json_match:
             return json.loads(json_match.group(0))
