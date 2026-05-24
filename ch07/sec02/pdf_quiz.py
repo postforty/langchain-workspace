@@ -69,7 +69,10 @@ def get_vectorstore():
         return FAISS.load_local(db_path, embeddings, allow_dangerous_deserialization=True)
     return None
 
-st.session_state.vectorstore = get_vectorstore()
+# [수정됨] Streamlit 재실행 시 기존 캐시된 예전 문서의 벡터 스토어로 덮어씌워지는 문제 방지
+# 현재 세션에 벡터 스토어가 없을 때(초기 실행 시)만 로컬 저장소에서 로드하도록 조건문 추가
+if st.session_state.vectorstore is None:
+    st.session_state.vectorstore = get_vectorstore()
 
 # ==========================================
 # --- [MISSION 영역: 수강생이 작성할 부분] ---
