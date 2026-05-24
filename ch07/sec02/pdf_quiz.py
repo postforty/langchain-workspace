@@ -63,7 +63,7 @@ def parse_ai_json(ai_response):
         st.error(f"JSON 파싱 오류: {e}")
     return None
 
-@st.cache_resource
+@st.cache_resource(show_spinner=False) # 로딩바를 표시하지 않음 -> 오류 해결 
 def get_vectorstore():
     """FAISS 저장소 로드"""
     if os.path.exists(db_path):
@@ -112,10 +112,7 @@ def load_and_parse_pdf(pdf_path):
 @tool
 def search_pdf_documents(query: str) -> str:
     """업로드된 PDF 문서 내에서 정보를 검색합니다."""
-    vectorstore = st.session_state.get("vectorstore")
-
-    if vectorstore is None:
-        vectorstore = get_vectorstore()
+    vectorstore = get_vectorstore()
     
     if vectorstore is not None:
         docs = vectorstore.similarity_search(query, k=3)
