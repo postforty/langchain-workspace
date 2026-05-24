@@ -6,6 +6,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain.agents import create_agent
 from langchain.tools import tool
 from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import StrOutputParser
 import tempfile
 import os
 import json
@@ -143,6 +144,7 @@ def initialize_agent():
 # Mission 4: 에이전트 호출 및 답변 생성
 def general_response(user_message):
     """에이전트를 사용하여 사용자의 질문에 답변하세요."""
+    
     history = st.session_state.messages
 
     if st.session_state.agent:
@@ -151,7 +153,10 @@ def general_response(user_message):
         )
 
         ai_msg = result["messages"][-1]
-        content = ai_msg.content
+        
+        # StrOutputParser를 사용하여 리스트나 메시지 객체에서 문자열만 깔끔하게 추출합니다.
+        parser = StrOutputParser()
+        content = parser.invoke(ai_msg)
 
         return content
 
