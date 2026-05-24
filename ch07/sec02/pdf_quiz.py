@@ -107,7 +107,7 @@ def load_and_parse_pdf(pdf_path):
     # [3] 벡터스토어 생성 및 로컬 저장
     st.session_state.vectorstore = FAISS.from_documents(split_docs, embeddings)
     st.session_state.vectorstore.save_local(db_path)
-
+    get_vectorstore.clear()  # 기존 캐시 초기화 (새로운 PDF 반영) -> 새로고침 후 다른 PDF 파일 업로드시 임베딩 안되던 문제 해결
 # Mission 2: 검색 도구(Tool) 정의
 @tool
 def search_pdf_documents(query: str) -> str:
