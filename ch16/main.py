@@ -23,6 +23,7 @@ from presentation.streamlit_app import render_ui
 @st.cache_resource
 def setup_di_container():
     """모든 어댑터와 유스케이스를 인스턴스화하고 의존성을 조립합니다."""
+    # Cache invalidation trigger (코드 수정 사항 반영을 위함)
     # 1. 인터페이스 어댑터(구현체) 인스턴스화
     pdf_parser = PDFParser()
     sqlite_repo = SQLiteIncorrectNoteRepository("incorrect_notes.db")

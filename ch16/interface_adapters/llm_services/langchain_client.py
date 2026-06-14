@@ -52,4 +52,14 @@ class LangChainGeminiClient(IQuestionGenerator, IQAService):
     def answer_question(self, query: str, context: str) -> str:
         """제공된 컨텍스트를 바탕으로 사용자 질문에 답변"""
         response = self._qa_chain.invoke({"query": query, "context": context})
-        return response
+        
+        if isinstance(response, list):
+            text_parts = []
+            for item in response:
+                if isinstance(item, dict) and "text" in item:
+                    text_parts.append(item["text"])
+                elif isinstance(item, str):
+                    text_parts.append(item)
+            return "".join(text_parts) if text_parts else str(response)
+            
+        return str(response)
