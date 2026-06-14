@@ -13,8 +13,85 @@ def render_ui(
     note_manager: NoteManagerUseCase
 ):
     st.set_page_config(page_title="AI 학습 도우미", page_icon="🤖", layout="wide")
-    st.title("🤖 AI 학습 도우미 챗봇")
-    st.markdown("PDF 교재를 업로드하고, AI와 함께 문제를 풀거나 질의응답을 진행해 보세요. (Clean Architecture 기반)")
+    st.markdown("""
+        <style>
+        /* 1. 글로벌 폰트 적용 (Pretendard) */
+        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+        html, body, [class*="css"]  {
+            font-family: 'Pretendard', 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif !important;
+        }
+
+        /* 2. 메인 타이틀 그라데이션 & 애니메이션 효과 */
+        h1 {
+            font-weight: 800 !important;
+            padding-bottom: 10px;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(45deg, #FF6B6B, #4ECDC4, #45B7D1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% 200%;
+            animation: gradient-animation 3s ease infinite;
+            display: inline-block;
+        }
+        
+        @keyframes gradient-animation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* 3. 설명 텍스트 (서브타이틀) 스타일링 - Glassmorphism 카드 느낌 (라이트/다크모드 대응) */
+        .subtitle-box {
+            background: rgba(128, 128, 128, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(128, 128, 128, 0.2);
+            border-radius: 12px;
+            padding: 15px 20px;
+            margin-bottom: 25px;
+            font-size: 1.1rem;
+            color: var(--text-color); /* Streamlit 기본 텍스트 색상 사용 */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+        
+        .subtitle-box:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        /* 4. 버튼 호버(Micro-animation) 효과 */
+        .stButton>button {
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            border: none;
+            background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%);
+            color: white;
+        }
+        
+        .stButton>button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(118, 75, 162, 0.4);
+            border-color: transparent;
+            color: white;
+        }
+
+        /* 5. 이모지 강제 렌더링 클래스 */
+        .emoji {
+            font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif !important;
+            font-weight: normal !important;
+        }
+        </style>
+    """, unsafe_allow_html=True)
+
+    st.markdown("<h1><span class='emoji'>🤖&#xFE0F;</span> <span class='gradient-text'>AI 학습 도우미 챗봇</span></h1>", unsafe_allow_html=True)
+    st.markdown("""
+        <div class="subtitle-box">
+            <span class='emoji'>📚&#xFE0F;</span> <strong>PDF 교재를 업로드</strong>하고, AI와 함께 문제를 풀거나 질의응답을 진행해 보세요. <br>
+            <span style="font-size: 0.9em; opacity: 0.7;">(Clean Architecture 기반)</span>
+        </div>
+    """, unsafe_allow_html=True)
 
     # 세션 상태 초기화
     if "is_indexed" not in st.session_state:
